@@ -55,8 +55,8 @@ export default (req, res) => {
 
         if(cal_state.includes(id)){
             if(msg === 'q'){
-                // let index = cal_state.indexOf(id)
-                // cal_state.splice(index, 1)
+                let index = cal_state.indexOf(id)
+                cal_state.splice(index, 1)
                 reply(reply_token, "ลาก่อน " +event.source.userId)
 
             }else if(msg === 'id'){
