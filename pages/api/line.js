@@ -2,26 +2,35 @@
 const request = require('request')
 require('dotenv').config()
 
-// const [arr, setArr] = useState([])
+const redis = require('redis')
+const client = redis.createClient();
 
-// export const [cal, setCal] = useState([false])
+client.on("error", function(error) {
+  console.error(error);
+});
+
+
+// client.set("key", "value", redis.print);
+// client.get("key", redis.print);
+
 
 let count = 0
 
-let cal_state = []
+const cal_state = []
+
+// 
+
 
 
 
 
 export default (req, res) => {
     count += 1
-    // res.status(200).json({ name: 'John Doe' })
-    console.log(".................")
 
-    console.log(req.body)
 
     console.log(".................")
-    // console.log(res)
+    console.log(req.headers.host)
+    console.log(".................")
 
     // handle LINE BOT webhook verification
     // The verification message does not contain any event, so length is zero.
@@ -42,15 +51,17 @@ export default (req, res) => {
 
     let id = event.source.userId
 
+    
+    
+
   
     if (event.message.type === 'text') {
         let msg = event.message.text.trim()
         console.log("count : ", count)
         console.log("message : "+msg)
-        console.log(".................")
 
+        console.log(".................")
         console.log("cal : ",cal_state)
-    
         console.log(".................")
 
         if(cal_state.includes(id)){
@@ -94,7 +105,7 @@ function reply(reply_token, msg) {
             text: msg
         }]
     })
-    console.log("reply =============> ", body)
+    // console.log("reply =============> ", body)
 
     request.post({
         url: 'https://api.line.me/v2/bot/message/reply',
@@ -102,5 +113,7 @@ function reply(reply_token, msg) {
         body: body
     }, (err, res, body) => {
         // console.log('status = ' + res.statusCode);
+
+        console.log("body ====> ", res.body)
     });
 }
