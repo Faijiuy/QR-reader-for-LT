@@ -1,13 +1,15 @@
+import { useState } from 'react';
 
+import axios from 'axios';
 const request = require('request')
 require('dotenv').config()
 
-const redis = require('redis')
-const client = redis.createClient();
+// const redis = require('redis')
+// const client = redis.createClient();
 
-client.on("error", function(error) {
-  console.error(error);
-});
+// client.on("error", function(error) {
+//   console.error(error);
+// });
 
 
 // client.set("key", "value", redis.print);
@@ -18,20 +20,16 @@ let count = 0
 
 const cal_state = []
 
+let calState = false
 // 
 
 
 
 
 
-export default (req, res) => {
-    count += 1
+export default function test(req, res) {
 
-
-    console.log(".................")
-    console.log(req.headers.host)
-    console.log(".................")
-
+    
     // handle LINE BOT webhook verification
     // The verification message does not contain any event, so length is zero.
     if( req.body.events.length === 0) {
@@ -45,53 +43,22 @@ export default (req, res) => {
 
     let reply_token = event.replyToken
 
-    // if (event.source.type === 'user') {
-    //     // console.log('User:', event.source.userId)
-    // }
 
     let id = event.source.userId
 
-    
-    
-
   
-    if (event.message.type === 'text') {
-        let msg = event.message.text.trim()
-        console.log("count : ", count)
-        console.log("message : "+msg)
+    if (event.message.type !== 'text') {
+        reply(reply_token, event.message.type)
 
-        console.log(".................")
-        console.log("cal : ",cal_state)
-        console.log(".................")
-
-        if(cal_state.includes(id)){
-            if(msg === 'q'){
-                let index = cal_state.indexOf(id)
-                cal_state.splice(index, 1)
-                reply(reply_token, "ลาก่อน " +event.source.userId)
-
-            }else if(msg === 'id'){
-                reply(reply_token, "id : " +cal_state)
-
-            }else{
-                // calculation function
-                reply(reply_token, eval(msg))  
-            }
-        }else{
-            if (msg === 'commands') {
-                reply(reply_token, "type คำนวณ to calculate\ntype anything to echo")
-            }else if(msg === 'คำนวณ'){
-                cal_state.push(id)
-                reply(reply_token, "สวัสดี " +event.source.userId +"\nพิม q เพื่อ ออก")            
-            } else {
-                // echo
-                reply(reply_token, msg)
-            }
-        }
+        
+    }else{
+        postToDialogflow(req)
     }
 }
 
 function reply(reply_token, msg) {
+
+
     let headers = {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer {' + process.env.CHANNEL_ACCESS_TOKEN + '}'
@@ -105,7 +72,7 @@ function reply(reply_token, msg) {
             text: msg
         }]
     })
-    // console.log("reply =============> ", body)
+    console.log("reply =============> ", body)
 
     request.post({
         url: 'https://api.line.me/v2/bot/message/reply',
@@ -114,6 +81,16 @@ function reply(reply_token, msg) {
     }, (err, res, body) => {
         // console.log('status = ' + res.statusCode);
 
-        console.log("body ====> ", res.body)
+        // console.log("body ====> ", res.body)
     });
+}
+
+const postToDialogflow = req =>{
+    req.headers.host = "dialogflow.cloud.google.com"
+    axios({
+        url:"https://dialogflow.cloud.google.com/v1/integrations/line/webhook/e8cc963c-2816-4340-892f-f424247eb2f5",
+        headers: req.headers,
+        method:"post",
+        data: req.body
+    })
 }
