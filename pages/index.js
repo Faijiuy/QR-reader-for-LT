@@ -1,49 +1,6 @@
-import liff from '@line/liff/dist/lib';
+
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
-
-const liffs = window.liff;
-
-class App extends Component {
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      displayName: '',
-      userId: '',
-      pictureUrl: '',
-      statusMessage: ''
-    };
-    this.initialize = this.initialize.bind(this);
-    this.closeApp = this.closeApp.bind(this);
-  }
-
-  componentDidMount() {
-    window.addEventListener('load', this.initialize);
-  }
-
-  initialize() {
-    liffs.init(async (data) => {
-      let profile = await liffs.getProfile();
-      this.setState({
-        displayName: profile.displayName,
-        userId: profile.userId,
-        pictureUrl: profile.pictureUrl,
-        statusMessage: profile.statusMessage
-      });
-    });
-  }
-
-  closeApp(event) {
-    event.preventDefault();
-    liffs.sendMessages([{
-      type: 'text',
-      text: "Thank you, Bye!"
-    }]).then(() => {
-      liffs.closeWindow();
-    });
-  }
-}
 
 export default function Home() {
 
@@ -53,9 +10,7 @@ export default function Home() {
         <title>Create Next App</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
-
-      <Button color="primary" onClick={this.closeApp}>Close</Button>
+      <script src="https://d.line-scdn.net/liff/1.0/sdk.js"></script>
 
       <main className={styles.main}>
         <h1 className={styles.title}>

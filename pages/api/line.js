@@ -1,7 +1,6 @@
 import { useState } from 'react';
 
 import axios from 'axios';
-import liff from '@line/liff/dist/lib';
 const request = require('request')
 require('dotenv').config()
 
