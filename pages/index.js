@@ -10,7 +10,6 @@ export default function Home() {
         <title>Create Next App</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <script src="https://d.line-scdn.net/liff/1.0/sdk.js"></script>
 
       <main className={styles.main}>
         <h1 className={styles.title}>
