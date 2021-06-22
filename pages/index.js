@@ -2,7 +2,7 @@ import liff from '@line/liff/dist/lib';
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
 
-const liff = window.liff;
+const liffs = window.liff;
 
 class App extends Component {
 
@@ -23,8 +23,8 @@ class App extends Component {
   }
 
   initialize() {
-    liff.init(async (data) => {
-      let profile = await liff.getProfile();
+    liffs.init(async (data) => {
+      let profile = await liffs.getProfile();
       this.setState({
         displayName: profile.displayName,
         userId: profile.userId,
@@ -36,18 +36,16 @@ class App extends Component {
 
   closeApp(event) {
     event.preventDefault();
-    liff.sendMessages([{
+    liffs.sendMessages([{
       type: 'text',
       text: "Thank you, Bye!"
     }]).then(() => {
-      liff.closeWindow();
+      liffs.closeWindow();
     });
   }
 }
 
 export default function Home() {
-
-  initializeLiff(1656119958 - EM1ZY5Yb)
 
   return (
     <div className={styles.container}>
