@@ -27,13 +27,13 @@ import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Link from '@material-ui/core/Link';
-// import MenuIcon from '@material-ui/icons/Menu';
+import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-// import NotificationsIcon from '@material-ui/icons/Notifications';
-// import { mainListItems, secondaryListItems } from './listItems';
-// import Chart from './Chart';
-// import Deposits from './Deposits';
-// import Orders from './Orders';
+import NotificationsIcon from '@material-ui/icons/Notifications';
+import { mainListItems, secondaryListItems } from './listItems';
+import Chart from './Chart';
+import Deposits from './Deposits';
+import Orders from './Orders';
 
 function Copyright() {
   return (
@@ -152,14 +152,14 @@ export default function Dashboard() {
             onClick={handleDrawerOpen}
             className={clsx(classes.menuButton, open && classes.menuButtonHidden)}
           >
-            {/* <MenuIcon /> */}
+            <MenuIcon />
           </IconButton>
           <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
             Example
           </Typography>
           <IconButton color="inherit">
             <Badge badgeContent={4} color="secondary">
-              {/* <NotificationsIcon /> */}
+              <NotificationsIcon />
             </Badge>
           </IconButton>
         </Toolbar>
@@ -173,11 +173,11 @@ export default function Dashboard() {
       >
         <div className={classes.toolbarIcon}>
           <IconButton onClick={handleDrawerClose}>
-            {/* <ChevronLeftIcon /> */}
+            <ChevronLeftIcon />
           </IconButton>
         </div>
         <Divider />
-        {/* <List>{mainListItems}</List> */}
+        <List>{mainListItems}</List>
         <Divider />
         {/* <List>{secondaryListItems}</List> */}
       </Drawer>
@@ -185,22 +185,22 @@ export default function Dashboard() {
         <div className={classes.appBarSpacer} />
         <Container maxWidth="lg" className={classes.container}>
           <Grid container spacing={3}>
-            {/* Chart */}
+            Chart
             <Grid item xs={12} md={8} lg={9}>
               <Paper className={fixedHeightPaper}>
-                {/* <Chart /> */}
+                <Chart />
               </Paper>
             </Grid>
-            {/* Recent Deposits */}
+            Recent Deposits
             <Grid item xs={12} md={4} lg={3}>
               <Paper className={fixedHeightPaper}>
-                {/* <Deposits /> */}
+                <Deposits />
               </Paper>
             </Grid>
-            {/* Recent Orders */}
+            Recent Orders
             <Grid item xs={12}>
               <Paper className={classes.paper}>
-                {/* <Orders /> */}
+                <Orders />
               </Paper>
             </Grid>
           </Grid>
