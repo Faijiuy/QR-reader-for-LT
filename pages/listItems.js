@@ -10,14 +10,18 @@ import BarChartIcon from '@material-ui/icons/BarChart';
 import LayersIcon from '@material-ui/icons/Layers';
 import AssignmentIcon from '@material-ui/icons/Assignment';
 
+function ListItemLink(props) {
+  return <ListItem button component="a" {...props} />;
+}
+
 export const mainListItems = (
   <div>
-    <ListItem button>
+    <ListItemLink href="/dashboard">
       <ListItemIcon>
         <DashboardIcon />
       </ListItemIcon>
       <ListItemText primary="Dashboard" />
-    </ListItem>
+    </ListItemLink>
     <ListItem button>
       <ListItemIcon>
         <ShoppingCartIcon />

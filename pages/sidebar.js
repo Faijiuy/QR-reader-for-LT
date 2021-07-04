@@ -129,7 +129,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Dashboard() {
+export default function Sidebar() {
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
   const handleDrawerOpen = () => {
@@ -186,13 +186,7 @@ export default function Dashboard() {
         <Container maxWidth="lg" className={classes.container}>
           <Grid container spacing={3}>
             
-          <Grid item xs={12} md={8} lg={9}>
-              <Paper className={fixedHeightPaper}>
-                Hellp
-              </Paper>
-            </Grid>
-
-            {/* <Grid item xs={12} md={8} lg={9}>
+            <Grid item xs={12} md={8} lg={9}>
               <Paper className={fixedHeightPaper}>
                 <Chart />
               </Paper>
@@ -208,7 +202,7 @@ export default function Dashboard() {
               <Paper className={classes.paper}>
                 <Orders />
               </Paper>
-            </Grid> */}
+            </Grid>
           </Grid>
           <Box pt={4}>
             <Copyright />
@@ -218,9 +212,3 @@ export default function Dashboard() {
     </div>
   );
 }
-
-// import Sidebar from './sidebar'
-
-// export default function dashboard(){
-//   return <Sidebar />
-// }
