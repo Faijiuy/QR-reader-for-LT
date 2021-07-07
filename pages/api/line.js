@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
 import axios from 'axios';
+import jsQR from 'jsqr'
 const request = require('request')
 require('dotenv').config()
 
@@ -21,6 +22,8 @@ const cal_state = []
 let calState = false
 // 
 
+const line = require('@line/bot-sdk');
+
 export default function test(req, res) {
 
 
@@ -37,11 +40,45 @@ export default function test(req, res) {
 
     let reply_token = event.replyToken
 
+    let arr = []
+
 
     let id = event.source.userId
 
 
     if (event.message.type !== 'text') {
+
+        const client = new line.Client({
+            channelAccessToken: process.env.CHANNEL_ACCESS_TOKEN
+        });
+
+        client.getMessageContent(event.message.id)
+            .then((stream) => {
+                stream.on('data', (chunk) => {
+                    console.log(chunk)
+                    // arr.push(chunk.toString())
+                    // let size = Buffer.byteLength(chunk)
+                    // for (let i = 0; i < size; i++) {
+                    //     arr.push(chunk[i])
+                    // }
+                    // console.log('arr: ', arr)
+                    // let imageDataY = new Uint8ClampedArray(arr);
+                    // console.log('imageDataY', imageDataY)
+                    // const code = jsQR(arr, 200, 200)
+                    // if (code) {
+                    //     console.log("Found QR code", code);
+                    //     console.log("Result", code.data);
+                    // } else {
+                    //     console.log("Do not detect code.")
+                    // }
+                });
+
+                stream.on('error', (err) => {
+                    console.log("Error", err)
+                });
+            });
+
+
         reply(reply_token, event.message.type)
 
 

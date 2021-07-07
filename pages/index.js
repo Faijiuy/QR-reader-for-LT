@@ -1,226 +1,123 @@
-// import React from 'react';
-// import ReactDOM from 'react-dom';
-// import Button from '@material-ui/core/Button';
 
-// export default function App() {
-//   return (
-//     <Button variant="contained" color="primary">
-//       Hello World
-//     </Button>
-//   );
-// }
+import Head from 'next/head'
+import styles from '../styles/Home.module.css'
+import jsQR from 'jsqr'
+import { useEffect, useState } from 'react'
 
-import React from 'react';
-import clsx from 'clsx';
-import { makeStyles } from '@material-ui/core/styles';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import Drawer from '@material-ui/core/Drawer';
-import Box from '@material-ui/core/Box';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import List from '@material-ui/core/List';
-import Typography from '@material-ui/core/Typography';
-import Divider from '@material-ui/core/Divider';
-import IconButton from '@material-ui/core/IconButton';
-import Badge from '@material-ui/core/Badge';
-import Container from '@material-ui/core/Container';
-import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
-import Link from '@material-ui/core/Link';
-import MenuIcon from '@material-ui/icons/Menu';
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import NotificationsIcon from '@material-ui/icons/Notifications';
-import { mainListItems, secondaryListItems } from './listItems';
-import Chart from './Chart';
-import Deposits from './Deposits';
-import Orders from './Orders';
+export default function Home() {
 
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {'Copyright © '}
-      <Link color="inherit" href="https://material-ui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
+  const [width, setWidth] = useState(0)
+  const [height, setHeight] = useState(0)
 
-const drawerWidth = 240;
+  const [qrData, setQRdata] = useState('')
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    display: 'flex',
-  },
-  toolbar: {
-    paddingRight: 24, // keep right padding when drawer closed
-  },
-  toolbarIcon: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    padding: '0 8px',
-    ...theme.mixins.toolbar,
-  },
-  appBar: {
-    zIndex: theme.zIndex.drawer + 1,
-    transition: theme.transitions.create(['width', 'margin'], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-  },
-  appBarShift: {
-    marginLeft: drawerWidth,
-    width: `calc(100% - ${drawerWidth}px)`,
-    transition: theme.transitions.create(['width', 'margin'], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  },
-  menuButton: {
-    marginRight: 36,
-  },
-  menuButtonHidden: {
-    display: 'none',
-  },
-  title: {
-    flexGrow: 1,
-  },
-  drawerPaper: {
-    position: 'relative',
-    whiteSpace: 'nowrap',
-    width: drawerWidth,
-    transition: theme.transitions.create('width', {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  },
-  drawerPaperClose: {
-    overflowX: 'hidden',
-    transition: theme.transitions.create('width', {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-    width: theme.spacing(7),
-    [theme.breakpoints.up('sm')]: {
-      width: theme.spacing(9),
-    },
-  },
-  appBarSpacer: theme.mixins.toolbar,
-  content: {
-    flexGrow: 1,
-    height: '100vh',
-    overflow: 'auto',
-  },
-  container: {
-    paddingTop: theme.spacing(4),
-    paddingBottom: theme.spacing(4),
-  },
-  paper: {
-    padding: theme.spacing(2),
-    display: 'flex',
-    overflow: 'auto',
-    flexDirection: 'column',
-  },
-  fixedHeight: {
-    height: 240,
-  },
-}));
 
-export default function Dashboard() {
-  const classes = useStyles();
-  const [open, setOpen] = React.useState(true);
-  const handleDrawerOpen = () => {
-    setOpen(true);
-  };
-  const handleDrawerClose = () => {
-    setOpen(false);
-  };
-  const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
+  useEffect(() => {
+
+    //Option 1: Work only on pure QR-code (@nuintun/qrcode)
+    // const qrcode = new Decoder();
+
+    // qrcode
+    //   .scan('./img/Test_QR_Coupon.png')
+    //   .then(result => {
+    //     console.log(result.data);
+    //   })
+    //   .catch(error => {
+    //     console.error(result.data);
+    //   });
+
+    //Option 2: Work only on pure QR-code picture (jsqr)
+
+    // const canvas = document.getElementById("canvas");
+    // const ctx = canvas.getContext('2d');
+    // const width = 100;
+    // const height = 100;
+
+    // const image = new Image;
+    // var imageDataT = new Uint8ClampedArray()
+    // image.src = './img/Test_QR_Coupon.png'
+    // image.onload = () => {
+    //   ctx.drawImage(image, 0, 0, width, height);
+    //   imageDataT = ctx.getImageData(0, 0, 100, 100);
+    //   console.log(imageDataT);
+    //   const code = jsQR(imageDataT.data, 100, 100, 'dontInvert')
+    //   console.log('Code:', code)
+    //   if (code) {
+    //     setQRdata(code.data)
+    //     console.log("Found QR code", code);
+    //   } else {
+    //     console.log("Do not detect code.")
+    //   }
+    // }
+
+    //Option 3: Work for picture of paper with QR-code (jsqr)
+    //But, not on pure QR-code picture.
+    // var url = 'https://scontent.fbkk6-1.fna.fbcdn.net/v/t1.6435-9/181720070_337312094402402_2434758660344882908_n.jpg?_nc_cat=110&ccb=1-3&_nc_sid=730e14&_nc_ohc=zBQCX0ZOjeEAX8vqC21&_nc_ht=scontent.fbkk6-1.fna&oh=31af8b43501175f7a25caad56b536c83&oe=60E88C9F'
+
+    // const image = new Image;
+    // // image.src = url
+    // // image.crossOrigin = "Anonymous";
+    // image.src = './img/Coupon_with_Hash.png'
+    // if (image.width > image.height) {
+    //   setWidth(600)
+    //   setHeight(400)
+    // } else if (image.width < image.height) {
+    //   setWidth(450)
+    //   setHeight(600)
+    // }
+
+    // const canvas = document.getElementById("canvas"); //Able to show picture on webpage
+    // // const canvas = document.createElement('canvas'); //Do not show picture on page
+    // canvas.width = width
+    // canvas.height = height 
+    // const ctx = canvas.getContext('2d');
+
+    // let imageDataT = new Uint8ClampedArray()
+
+    // image.onload = () => {
+    //   ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+    //   // console.log('width:', image.width)
+    //   // console.log('height:', image.height)
+    //   imageDataT = ctx.getImageData(0, 0, image.width, image.height);
+    //   console.log(imageDataT);
+    //   const code = jsQR(imageDataT.data, image.width, image.height, 'dontInvert')
+    //   if (code) {
+    //     setQRdata(code.data)
+    //     console.log("Found QR code", code);
+    //     console.log("Result", code.data);
+    //   } else {
+    //     console.log("Do not detect QR-code.")
+    //   }
+    // }
+
+  })
 
   return (
-    <div className={classes.root}>
-      <CssBaseline />
-      <AppBar position="absolute" className={clsx(classes.appBar, open && classes.appBarShift)}>
-        <Toolbar className={classes.toolbar}>
-          <IconButton
-            edge="start"
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            className={clsx(classes.menuButton, open && classes.menuButtonHidden)}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-            Example
-          </Typography>
-          <IconButton color="inherit">
-            <Badge badgeContent={4} color="secondary">
-              <NotificationsIcon />
-            </Badge>
-          </IconButton>
-        </Toolbar>
-      </AppBar>
-      <Drawer
-        variant="permanent"
-        classes={{
-          paper: clsx(classes.drawerPaper, !open && classes.drawerPaperClose),
-        }}
-        open={open}
-      >
-        <div className={classes.toolbarIcon}>
-          <IconButton onClick={handleDrawerClose}>
-            <ChevronLeftIcon />
-          </IconButton>
-        </div>
-        <Divider />
-        <List>{mainListItems}</List>
-        <Divider />
-        <List>{secondaryListItems}</List>
-      </Drawer>
-      <main className={classes.content}>
-        <div className={classes.appBarSpacer} />
-        <Container maxWidth="lg" className={classes.container}>
-          <Grid container spacing={3}>
-            
-          <Grid item xs={12} md={8} lg={9}>
-              <Paper className={fixedHeightPaper}>
-                Hellp
-              </Paper>
-            </Grid>
+    <div className={styles.container}>
+      <Head>
+        <title>Create Next App</title>
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
 
-            {/* <Grid item xs={12} md={8} lg={9}>
-              <Paper className={fixedHeightPaper}>
-                <Chart />
-              </Paper>
-            </Grid>
-            
-            <Grid item xs={12} md={4} lg={3}>
-              <Paper className={fixedHeightPaper}>
-                <Deposits />
-              </Paper>
-            </Grid>
-            
-            <Grid item xs={12}>
-              <Paper className={classes.paper}>
-                <Orders />
-              </Paper>
-            </Grid> */}
-          </Grid>
-          <Box pt={4}>
-            <Copyright />
-          </Box>
-        </Container>
+      <main className={styles.main}>
+        <h1 className={styles.title}>
+          Detect QR-Code from Picture
+        </h1>
+        <p></p>
+
+        <p>Width: {width} ,Height: {height}</p>
+
+        <p className={styles.description}>
+          Result: {qrData}
+        </p>
+
+        <canvas id="canvas" width={width} height={height}></canvas>
+        
       </main>
+
+      <footer className={styles.footer}>
+
+      </footer>
     </div>
-  );
+  )
 }
-
-// import Sidebar from './sidebar'
-
-// export default function dashboard(){
-//   return <Sidebar />
-// }
