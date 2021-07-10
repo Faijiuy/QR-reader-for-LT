@@ -1,14 +1,16 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import fs, { read } from 'fs'
 
 import axios from 'axios';
 import jsQR from 'jsqr'
+
 const request = require('request')
 require('dotenv').config()
 
 // const redis = require('redis')
 // const client = redis.createClient();
 
-// client.on("error", function(error) {
+// client.on("error", function(error) {s
 //   console.error(error);
 // });
 
@@ -41,6 +43,7 @@ export default function test(req, res) {
     let reply_token = event.replyToken
 
     let arr = []
+    let path = './public/img/QR-Code.png'
 
 
     let id = event.source.userId
@@ -56,12 +59,14 @@ export default function test(req, res) {
             .then((stream) => {
                 stream.on('data', (chunk) => {
                     console.log(chunk)
-                    // arr.push(chunk.toString())
                     // let size = Buffer.byteLength(chunk)
-                    // for (let i = 0; i < size; i++) {
-                    //     arr.push(chunk[i])
-                    // }
-                    // console.log('arr: ', arr)
+                    // stream.push(chunk)
+                    arr.push(chunk)
+                    // stream.read(size)
+                    // fs.writeFile('/public/img/logo.png', chunk, function (err) {
+                    //     if (err) throw err
+                    //     console.log('File saved.')
+                    // })
                     // let imageDataY = new Uint8ClampedArray(arr);
                     // console.log('imageDataY', imageDataY)
                     // const code = jsQR(arr, 200, 200)
@@ -76,14 +81,68 @@ export default function test(req, res) {
                 stream.on('error', (err) => {
                     console.log("Error", err)
                 });
-            });
 
+                stream.on('end', function () {
+
+                    //fs.writeFile('logo.png', imagedata, 'binary', function(err){
+
+                    var buffer = Buffer.concat(arr)
+                    fs.writeFileSync(path, buffer, function (err) {
+                        if (err) throw err
+                        console.log('File saved.')
+                    })
+                })
+
+                stream.on('end', function() {
+                    readPic()
+                })
+            });
 
         reply(reply_token, event.message.type)
 
 
     } else {
         postToDialogflow(req)
+    }
+
+}
+
+function readPic() {
+    const image = new Image;
+    // // image.src = url
+    // // image.crossOrigin = "Anonymous";
+    image.src = './public/img/QR-Code.png'
+    if (image.width > image.height) {
+        setWidth(600)
+        setHeight(400)
+    } else if (image.width < image.height) {
+        setWidth(450)
+        setHeight(600)
+    }
+
+    // const canvas = document.getElementById("canvas"); //Able to show picture on webpage
+    // const canvas = document.createElement('canvas'); //Do not show picture on page
+    const canvas = new OffscreenCanvas(image.width, image.height);
+    canvas.width = width
+    canvas.height = height
+    const ctx = canvas.getContext('2d');
+
+    let imageDataT = new Uint8ClampedArray()
+
+    image.onload = () => {
+        ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+        // console.log('width:', image.width)
+        // console.log('height:', image.height)
+        imageDataT = ctx.getImageData(0, 0, image.width, image.height);
+        console.log(imageDataT);
+        const code = jsQR(imageDataT.data, image.width, image.height, 'dontInvert')
+        if (code) {
+            setQRdata(code.data)
+            console.log("Found QR code", code);
+            console.log("Result", code.data);
+        } else {
+            console.log("Do not detect QR-code.")
+        }
     }
 }
 
