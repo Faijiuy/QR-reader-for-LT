@@ -3,6 +3,8 @@ import fs, { read } from 'fs'
 
 import axios from 'axios';
 import jsQR from 'jsqr'
+var QrCode = require('qrcode-reader');
+var Jimp = require("jimp");
 
 const request = require('request')
 require('dotenv').config()
@@ -26,6 +28,8 @@ let calState = false
 
 const line = require('@line/bot-sdk');
 
+let resultData = {}
+
 export default function test(req, res) {
 
 
@@ -44,7 +48,6 @@ export default function test(req, res) {
 
     let arr = []
     let path = './public/img/QR-Code.png'
-
 
     let id = event.source.userId
 
@@ -93,12 +96,34 @@ export default function test(req, res) {
                     })
                 })
 
-                stream.on('end', function() {
-                    readPic()
+                stream.on('end', function () {
+                    console.log("Read Pic")
+                    const imageFile = './public/img/QR-Code.png'
+                    var qr = new QrCode();
+
+                    var buffer = fs.readFileSync(imageFile);
+                    Jimp.read(buffer, function (err, image) {
+                        if (err) {
+                            console.error(err);
+                            // TODO handle error
+                        }
+                        var qr = new QrCode();
+                        qr.callback = function (err, value) {
+                            if (err) {
+                                console.error(err);
+                                // TODO handle error
+                            }
+                            resultData = value
+                            console.log(value);
+                            console.log('resultData ====> ', resultData.result)
+                            reply(reply_token, resultData.result)
+                        };
+                        qr.decode(image.bitmap);
+                    });
                 })
             });
 
-        reply(reply_token, event.message.type)
+        reply(reply_token, event.message.text)
 
 
     } else {
@@ -107,44 +132,34 @@ export default function test(req, res) {
 
 }
 
-function readPic() {
-    const image = new Image;
-    // // image.src = url
-    // // image.crossOrigin = "Anonymous";
-    image.src = './public/img/QR-Code.png'
-    if (image.width > image.height) {
-        setWidth(600)
-        setHeight(400)
-    } else if (image.width < image.height) {
-        setWidth(450)
-        setHeight(600)
-    }
+// function readPic() {
+//     console.log("Read Pic")
+//     const imageFile = './public/img/QR-Code.png'
+//     var qr = new QrCode();
 
-    // const canvas = document.getElementById("canvas"); //Able to show picture on webpage
-    // const canvas = document.createElement('canvas'); //Do not show picture on page
-    const canvas = new OffscreenCanvas(image.width, image.height);
-    canvas.width = width
-    canvas.height = height
-    const ctx = canvas.getContext('2d');
+//     var buffer = fs.readFileSync(imageFile);
+//     Jimp.read(buffer, function(err, image) {
+//         if (err) {
+//             console.error(err);
+//             // TODO handle error
+//         }
+//         var qr = new QrCode();
+//         qr.callback = function(err, value) {
+//             if (err) {
+//                 console.error(err);
+//                 // TODO handle error
+//             }
+//             resultData = value
+//             // console.log(value);
+//             console.log('resultData ====> ', resultData)
+//         };
+//         qr.decode(image.bitmap);
+//     });
 
-    let imageDataT = new Uint8ClampedArray()
-
-    image.onload = () => {
-        ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
-        // console.log('width:', image.width)
-        // console.log('height:', image.height)
-        imageDataT = ctx.getImageData(0, 0, image.width, image.height);
-        console.log(imageDataT);
-        const code = jsQR(imageDataT.data, image.width, image.height, 'dontInvert')
-        if (code) {
-            setQRdata(code.data)
-            console.log("Found QR code", code);
-            console.log("Result", code.data);
-        } else {
-            console.log("Do not detect QR-code.")
-        }
-    }
-}
+//     return {
+//         resultData
+//     }
+// }
 
 function reply(reply_token, msg) {
 
